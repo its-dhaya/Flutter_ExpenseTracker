@@ -60,7 +60,12 @@ class ExpenseSummary extends StatelessWidget {
     for (int i = 0; i < values.length; i++) {
       total += values[i];
     }
-    return total.toStringAsFixed(2);
+    return total.round().toString(); // returning total as integer
+  }
+
+  String calculateIncomeTotal(ExpenseData value) {
+    double incomeTotal = value.calculateIncomeTotal();
+    return incomeTotal.round().toString(); // returning incomeTotal as integer
   }
 
   @override
@@ -76,7 +81,7 @@ class ExpenseSummary extends StatelessWidget {
       builder: (context, value, child) => Column(
         children: [
           Padding(
-            padding: const EdgeInsets.all(25.0),
+            padding: const EdgeInsets.only(right: 20,bottom:20,top: 25 ),
             child: Row(
               children: [
                 Text(
@@ -86,7 +91,17 @@ class ExpenseSummary extends StatelessWidget {
                 Text(
                   '₹${calculateWeektotal(value, sunday, monday, tuesday, wednesday, thursday, friday, saturday)}',
                   style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
-                )
+                ),
+                SizedBox(width: 10),
+                Padding(padding: EdgeInsets.only(right: 65)),
+                Text(
+                  "Income:",
+                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
+                ),
+                Text(
+                  '₹${calculateIncomeTotal(value)}',
+                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
+                ),
               ],
             ),
           ),

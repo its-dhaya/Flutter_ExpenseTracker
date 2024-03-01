@@ -40,6 +40,7 @@ dependencies:
   hive:
   hive_flutter:
   flutter_slidable:
+  intl: 
 
 dev_dependencies:
   flutter_test:

@@ -1,14 +1,16 @@
 import "package:flutter/material.dart";
 import "package:flutter_slidable/flutter_slidable.dart";
+import "package:intl/intl.dart";
 
-class ExpensTile extends StatelessWidget {
+// ignore: must_be_immutable
+class ExpenseTile extends StatelessWidget {
 late final String name;
 late final String amount;
 late final DateTime dateTime;
 void Function(BuildContext)? deleteTapped;
 void Function(BuildContext)? editTapped;
 
-  ExpensTile({
+  ExpenseTile({
     super.key,
     required this.name,
     required this.amount,
@@ -47,7 +49,9 @@ void Function(BuildContext)? editTapped;
 
           child: ListTile(
                 title: Text(name,style: TextStyle(fontWeight: FontWeight.bold,fontSize: 18),),
-                subtitle: Text('${dateTime.day} / ${dateTime.month} / ${dateTime.year}'),
+                  subtitle: Text(
+    '${DateFormat('EEEE, MMM d, yyyy').format(dateTime)}', // Format date including day of the week
+  ),
                 trailing: Text('₹'+amount,style: TextStyle(fontWeight: FontWeight.bold,fontSize: 16),),
                 ),
       )
