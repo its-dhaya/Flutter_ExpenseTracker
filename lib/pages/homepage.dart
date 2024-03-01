@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import '../components/expensesummary.dart';
+import 'package:project/components/expensesummary.dart';
 import 'package:project/components/expensetile.dart';
 import 'package:project/data/expensedata.dart';
 import 'package:project/models/expenseitem.dart';
@@ -24,7 +24,7 @@ class _HomePageState extends State<HomePage> {
     Provider.of<ExpenseData>(context, listen: false).perpareData();
   }
 
-  void addnewExpense() {
+  void addNewExpense() {
     showDialog(
       context: context,
       builder: (context) => AlertDialog(
@@ -69,7 +69,7 @@ class _HomePageState extends State<HomePage> {
         dateTime: DateTime.now(),
       );
       Provider.of<ExpenseData>(context, listen: false)
-          .addnewExpense(newExpense);
+          .addNewExpense(newExpense);
       Navigator.pop(context);
       clear();
     }
@@ -106,12 +106,11 @@ class _HomePageState extends State<HomePage> {
     );
   }
 
-    void saveIncome() {
+  void saveIncome() {
     if (newIncomeAmountController.text.isNotEmpty) {
       String amount = '${newIncomeAmountController.text}';
-      // Add income item
       Provider.of<ExpenseData>(context, listen: false)
-          .addnewIncome(amount);
+          .addNewIncome(amount);
       Navigator.pop(context);
       clear();
     }
@@ -183,9 +182,6 @@ class _HomePageState extends State<HomePage> {
     );
   }
 
-
- 
-
   void saveEditedExpense(BuildContext context, ExpenseItem expense) {
     if (newExpenseNameController.text.isNotEmpty &&
         newExpenseAmountController.text.isNotEmpty) {
@@ -212,116 +208,117 @@ class _HomePageState extends State<HomePage> {
 
   @override
   Widget build(BuildContext context) {
-    return  Consumer<ExpenseData>(
-          builder: (context, value, child) => Scaffold(
-            resizeToAvoidBottomInset: false,
-            backgroundColor: Colors.grey.shade300,
-            body: Column(
-              
-              children: [
-                SizedBox(
-                  height: 695, // Adjust the height as needed
-                  child: SingleChildScrollView(
-                    child: Column(
-                      children: [
-                        Container(
-                          margin: EdgeInsets.all(0),
-                          padding: EdgeInsets.all(12),
-                          decoration: BoxDecoration(
-                            color: Colors.grey.shade300,
-                            borderRadius: BorderRadius.circular(0),
-                            
-                          ),
-                          child: ExpenseSummary(startofWeek: value.startofWeekData()),
-                        ),
-                        
-                        Container(
-                          margin: EdgeInsets.all(0),
-                          padding: EdgeInsets.all(6),
-                          decoration: BoxDecoration(
-                            color: Colors.grey.shade300,
-                          borderRadius: BorderRadius.circular(0),
-                          ),
-                          child: ListView.builder(
-                            shrinkWrap: true,
-                            physics: NeverScrollableScrollPhysics(),
-                            itemCount: value.getallExpenseList().length,
-                            itemBuilder: (context, index) => ExpenseTile(
-                              name: value.getallExpenseList()[index].name!,
-                              amount: value.getallExpenseList()[index].amount!,
-                              dateTime: value.getallExpenseList()[index].dateTime,
+    return Consumer<ExpenseData>(
+      builder: (context, value, child) => Scaffold(
+        resizeToAvoidBottomInset: false,
+        backgroundColor: Colors.grey.shade300,
+        body: Column(
+          children: [
+            SizedBox(
+              height: 695,
+              child: SingleChildScrollView(
+                child: Column(
+                  children: [
+                    Container(
+                      margin: EdgeInsets.all(0),
+                      padding: EdgeInsets.all(12),
+                      decoration: BoxDecoration(
+                        color: Colors.grey.shade300,
+                        borderRadius: BorderRadius.circular(0),
+                      ),
+                      child: ExpenseSummary(startofWeek: value.startofWeekData()),
+                    ),
+                    Container(
+                      margin: EdgeInsets.all(0),
+                      padding: EdgeInsets.all(6),
+                      decoration: BoxDecoration(
+                        color: Colors.grey.shade300,
+                        borderRadius: BorderRadius.circular(0),
+                      ),
+                      child: ListView.builder(
+                        shrinkWrap: true,
+                        physics: NeverScrollableScrollPhysics(),
+                        itemCount: value.getallExpenseList().length,
+                        itemBuilder: (context, index) {
+                          final expense = value.getallExpenseList()[index];
+                          // Filter out income from the list of expenses
+                          if (expense.name != 'Income') {
+                            return ExpenseTile(
+                              name: expense.name!,
+                              amount: expense.amount!,
+                              dateTime: expense.dateTime,
                               deleteTapped: (p0) =>
-                                  deleteExpense(value.getallExpenseList()[index]),
+                                  deleteExpense(expense),
                               editTapped: (p0) =>
-                                  editExpense(value.getallExpenseList()[index]),
-                            ),
-                          ),
-                        ),
-                      ],
+                                  editExpense(expense),
+                            );
+                          } else {
+                            // Return an empty container for income
+                            return Container();
+                          }
+                        },
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+            Container(
+              color: Colors.grey.shade300,
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: [
+                  Expanded(
+                    child: Container(
+                      margin: EdgeInsets.only(right: 10),
+                      padding: EdgeInsets.only(left: 10),
+                      child: FloatingActionButton.extended(
+                        shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(30)),
+                        onPressed: () {},
+                        label: Text('Calculate',
+                            style: TextStyle(color: Colors.white)),
+                        foregroundColor: Colors.white,
+                        backgroundColor: Colors.black87,
+                      ),
                     ),
                   ),
-                ),
-               // Adjust spacing as needed
-                Container(
-                  color: Colors.grey.shade300,
-                  child: Row(
-                    
-                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                    children: [
-                      Expanded(
-                        child: Container(
-                          margin: EdgeInsets.only(right: 10),
-                          padding: EdgeInsets.only(left: 10),
-                          child: FloatingActionButton.extended(
-                            shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(30)),
-                            onPressed: () {},
-                            label: Text('Calculate',
-                                style: TextStyle(color: Colors.white)),
-                            foregroundColor: Colors.white,
-                            backgroundColor: Colors.black87,
-                          ),
-                        ),
+                  Expanded(
+                    child: Container(
+                      margin: EdgeInsets.only(right: 10, left: 10),
+                      padding: EdgeInsets.only(left: 5),
+                      child: FloatingActionButton.extended(
+                        shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(30)),
+                        onPressed: addNewExpense,
+                        label: Text('Add Expense',
+                            style: TextStyle(color: Colors.white)),
+                        foregroundColor: Colors.white,
+                        backgroundColor: Colors.black87,
                       ),
-                      Expanded(
-                        child: Container(
-                          margin: EdgeInsets.only(right: 10,left: 10),
-                          padding: EdgeInsets.only(left: 5),
-                          child: FloatingActionButton.extended(
-                            shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(30)),
-                            onPressed: addnewExpense,
-                            label: Text('Add Expense',
-                                style: TextStyle(color: Colors.white)),
-                            foregroundColor: Colors.white,
-                            backgroundColor: Colors.black87,
-                          ),
-                        ),
-                      ),
-                      Expanded(
-                        child: Container(
-                          margin: EdgeInsets.symmetric(vertical: 15),
-                          padding: EdgeInsets.only(right: 17,left: 18),
-                          child: FloatingActionButton.extended(
-                            shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(30)),
-                            onPressed: (){
-                              addIncome();
-                            },
-                            label: Text('Income',
-                                style: TextStyle(color: Colors.white)),
-                            foregroundColor: Colors.white,
-                            backgroundColor: Colors.black87,
-                          ),
-                        ),
-                      ),
-                    ],
+                    ),
                   ),
-                ),
-              ],
+                  Expanded(
+                    child: Container(
+                      margin: EdgeInsets.symmetric(vertical: 15),
+                      padding: EdgeInsets.only(right: 17, left: 18),
+                      child: FloatingActionButton.extended(
+                        shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(30)),
+                        onPressed: addIncome,
+                        label: Text('Income',
+                            style: TextStyle(color: Colors.white)),
+                        foregroundColor: Colors.white,
+                        backgroundColor: Colors.black87,
+                      ),
+                    ),
+                  ),
+                ],
+              ),
             ),
-          ),
-        );
-
+          ],
+        ),
+      ),
+    );
   }
 }

@@ -20,17 +20,23 @@ class ExpenseData extends ChangeNotifier {
   }
 
   // Add new expense
-  void addnewExpense(ExpenseItem newExpense) {
+  void addNewExpense(ExpenseItem newExpense) {
     overallExpensList.add(newExpense);
+    if (newExpense.name != 'Income') {
+      db.saveData(overallExpensList);
+    } else {
+      deductIncome(newExpense.amount);
+    }
     notifyListeners();
-    db.saveData(overallExpensList);
   }
 
   // Delete expense
   void deleteExpense(ExpenseItem expense) {
     overallExpensList.remove(expense);
+    if (expense.name != 'Income') {
+      db.saveData(overallExpensList);
+    }
     notifyListeners();
-    db.saveData(overallExpensList);
   }
 
   // Weekly data
@@ -69,33 +75,37 @@ class ExpenseData extends ChangeNotifier {
   }
 
   Map<String, double> calculateDailyExpense() {
-    Map<String, double> dailyexpense = {};
+    Map<String, double> dailyExpense = {};
 
     for (var expense in overallExpensList) {
-      String date = convertDateTimetoString(expense.dateTime);
-      double amount = double.parse(expense.amount);
+      if (expense.name != 'Income') {
+        String date = convertDateTimetoString(expense.dateTime);
+        double amount = double.parse(expense.amount);
 
-      if (dailyexpense.containsKey(date)) {
-        double currentAmount = dailyexpense[date]!;
-        currentAmount += amount;
-        dailyexpense[date] = currentAmount;
-      } else {
-        dailyexpense.addAll({date: amount});
+        if (dailyExpense.containsKey(date)) {
+          double currentAmount = dailyExpense[date]!;
+          currentAmount += amount;
+          dailyExpense[date] = currentAmount;
+        } else {
+          dailyExpense.addAll({date: amount});
+        }
       }
     }
-    return dailyexpense;
+    return dailyExpense;
   }
 
   // Add new income
-  void addnewIncome(String amount) {
+  void addNewIncome(String amount) {
     DateTime now = DateTime.now();
-    overallExpensList.add(ExpenseItem(
+    overallExpensList.removeWhere((expense) => expense.name == 'Income');
+    ExpenseItem newIncome = ExpenseItem(
       name: 'Income',
       amount: amount,
       dateTime: now,
-    ));
+    );
+
+    overallExpensList.add(newIncome);
     notifyListeners();
-    db.saveData(overallExpensList);
   }
 
   // Calculate income total
@@ -103,9 +113,22 @@ class ExpenseData extends ChangeNotifier {
     double total = 0;
     for (var expense in overallExpensList) {
       if (expense.name == 'Income') {
-        total += double.parse(expense.amount!);
+        total += double.parse(expense.amount);
       }
     }
     return total;
+  }
+
+  void deductIncome(String amount) {
+    double currentIncome = calculateIncomeTotal();
+    double deductedAmount = double.parse(amount);
+    double newIncome = currentIncome - deductedAmount;
+
+    overallExpensList.removeWhere((expense) => expense.name == 'Income');
+    overallExpensList.add(ExpenseItem(
+      name: 'Income',
+      amount: newIncome.toString(),
+      dateTime: DateTime.now(),
+    ));
   }
 }
