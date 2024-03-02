@@ -268,21 +268,7 @@ class _HomePageState extends State<HomePage> {
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: [
-                  Expanded(
-                    child: Container(
-                      margin: EdgeInsets.only(right: 10),
-                      padding: EdgeInsets.only(left: 10),
-                      child: FloatingActionButton.extended(
-                        shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(30)),
-                        onPressed: () {},
-                        label: Text('Calculate',
-                            style: TextStyle(color: Colors.white)),
-                        foregroundColor: Colors.white,
-                        backgroundColor: Colors.black87,
-                      ),
-                    ),
-                  ),
+
                   Expanded(
                     child: Container(
                       margin: EdgeInsets.only(right: 10, left: 10),
