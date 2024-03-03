@@ -9,7 +9,7 @@ class ExpenseSummary extends StatelessWidget {
 
   const ExpenseSummary({
     Key? key,
-    required this.startofWeek,
+    required this.startofWeek, required String incomeAmount,
   }) : super(key: key);
 
   double calculateMax(
@@ -97,44 +97,68 @@ class ExpenseSummary extends StatelessWidget {
         String remainingIncome = calculateRemainingIncome(value);
         return Column(
           children: [
+            
             Padding(
-              padding: const EdgeInsets.only(right: 20, bottom: 10, top: 25),
-              child: Row(
-                children: [
-                  Text(
-                    "Weekly Total:",
-                    style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
-                  ),
-                  Text(
-                    '₹${calculateWeektotal(value, sunday, monday, tuesday, wednesday, thursday, friday, saturday)}',
-                    style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
-                  ),
-                  SizedBox(width: 10),
-                  Padding(padding: EdgeInsets.only(right: 65)),
-                  Text(
-                    "Income:",
-                    style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
-                  ),
-                  Text(
-                    '₹$incomeTotal',
-                    style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
-                  ),
-                ],
+              padding: const EdgeInsets.all(10),
+              child: Container(
+                height: 40,
+                decoration: BoxDecoration(color: Colors.blueGrey.shade900,
+                borderRadius: BorderRadius.circular(20)),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        
+                        Padding(
+                          padding: const EdgeInsets.all(8),
+                          child: Text(
+                            "Weekly Total:",
+                            style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16,color: Colors.white),
+                          ),
+                        ),
+                      ],
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Text(
+                        '₹${calculateWeektotal(value, sunday, monday, tuesday, wednesday, thursday, friday, saturday)}',
+                        style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16,color: Colors.white),
+                      ),
+                    ),
+                
+                  ],
+                ),
               ),
             ),
+            
+            
             Padding(
-              padding: const EdgeInsets.only(right: 20, bottom: 20),
-              child: Row(
-                children: [
-                  Text(
-                    "Remaining Income:",
-                    style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
-                  ),
-                  Text(
-                    '₹$remainingIncome',
-                    style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
-                  ),
-                ],
+              padding: const EdgeInsets.all(10),
+              child: Container(
+                height: 40,
+                decoration: BoxDecoration(color: Colors.blueGrey.shade900,
+                borderRadius: BorderRadius.circular(20),),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Text(
+                        "Remaining Income:",
+                        style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16,color: Colors.white),
+                      ),
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Text(
+                        '₹$remainingIncome',
+                        style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16,color: Colors.white),
+                      ),
+                    ),
+                  ],
+                ),
               ),
             ),
             SizedBox(

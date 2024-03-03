@@ -16,12 +16,162 @@ class _HomePageState extends State<HomePage> {
   final newExpenseNameController = TextEditingController();
   final newExpenseAmountController = TextEditingController();
   final newIncomeAmountController = TextEditingController();
+  String incomeAmount = "";
 
   @override
   void initState() {
     super.initState();
-
     Provider.of<ExpenseData>(context, listen: false).perpareData();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Consumer<ExpenseData>(
+      builder: (context, value, child) => Scaffold(
+        appBar: AppBar(
+          title: Text(
+            'Walletly',
+            style: TextStyle(
+              fontWeight: FontWeight.bold,
+              fontSize: 35,
+              color: Colors.white,
+            ),
+          ),
+          centerTitle: true,
+          backgroundColor: Colors.black87,
+          leading: Builder(
+            builder: (context) => IconButton(
+              icon: Icon(Icons.menu, color: Colors.white),
+              onPressed: () {
+                Scaffold.of(context).openDrawer();
+              },
+            ),
+          ),
+        ),
+        drawer: Drawer(
+          child: ListView(
+            padding: EdgeInsets.zero,
+            children: [
+              SizedBox(
+                height: 188,
+                child: DrawerHeader(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        'Your Income!',
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontWeight: FontWeight.bold,
+                          fontSize: 25,
+                        ),
+                      ),
+                      SizedBox(height: 30),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Text('AMOUNT: ₹$incomeAmount', style: TextStyle(fontWeight: FontWeight.bold,color: Colors.white)),
+                          IconButton(
+                            icon: Icon(Icons.edit),
+                            color: Colors.white,
+                            onPressed: () => editIncome(context),
+                          ),
+                        ],
+                        
+                      ),
+                      
+                    ],
+                  ),
+                  decoration: BoxDecoration(
+                    color: Colors.black87,
+                  ),
+                ),
+              ),
+            ],
+          ),
+        ),
+        resizeToAvoidBottomInset: false,
+        backgroundColor: Colors.white,
+        body: Column(
+          children: [
+            SizedBox(
+              height: 690,
+              child: SingleChildScrollView(
+                child: Column(
+                  children: [
+                    Container(
+                      margin: EdgeInsets.all(0),
+                      padding: EdgeInsets.all(12),
+                      decoration: BoxDecoration(
+                        color: Colors.white,
+                        borderRadius: BorderRadius.circular(0),
+                      ),
+                      child: ExpenseSummary(
+                        startofWeek: value.startofWeekData(),
+                        incomeAmount: incomeAmount,
+                      ),
+                    ),
+                    Container(
+                      margin: EdgeInsets.all(0),
+                      padding: EdgeInsets.all(6),
+                      decoration: BoxDecoration(
+                        color: Colors.white,
+                        borderRadius: BorderRadius.circular(0),
+                      ),
+                      child: ListView.builder(
+                        shrinkWrap: true,
+                        physics: NeverScrollableScrollPhysics(),
+                        itemCount: value.getallExpenseList().length,
+                        itemBuilder: (context, index) {
+                          final expense = value.getallExpenseList()[index];
+                          if (expense.name != 'Income') {
+                            return ExpenseTile(
+                              name: expense.name!,
+                              amount: expense.amount!,
+                              dateTime: expense.dateTime,
+                              deleteTapped: (p0) => deleteExpense(expense),
+                              editTapped: (p0) => editExpense(expense),
+                            );
+                          } else {
+                            return Container();
+                          }
+                        },
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+            Container(
+              color: Colors.white,
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: [
+                  Expanded(
+                    child: Container(
+                      margin: EdgeInsets.only(right: 10, left: 10),
+                      padding: EdgeInsets.only(left: 5),
+                      child: MaterialButton(
+                        onPressed: addNewExpense,
+                        color: Colors.black87,
+                        textColor: Colors.white,
+                        elevation: 0,
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(30),
+                        ),
+                        minWidth: 10,
+                        height: 50,
+                        child: Text('Add Expense'),
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
   }
 
   void addNewExpense() {
@@ -58,7 +208,7 @@ class _HomePageState extends State<HomePage> {
       ),
     );
   }
-  
+
   void save() {
     if (newExpenseNameController.text.isNotEmpty &&
         newExpenseAmountController.text.isNotEmpty) {
@@ -75,11 +225,11 @@ class _HomePageState extends State<HomePage> {
     }
   }
 
-  void addIncome() {
+  void editIncome(BuildContext context) {
     showDialog(
       context: context,
       builder: (context) => AlertDialog(
-        title: Text('Add Income'),
+        title: Text('Enter Income'),
         content: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
@@ -98,7 +248,7 @@ class _HomePageState extends State<HomePage> {
             child: Text('Cancel'),
           ),
           MaterialButton(
-            onPressed: saveIncome,
+            onPressed: () => saveIncome(context),
             child: Text('Save'),
           )
         ],
@@ -106,9 +256,12 @@ class _HomePageState extends State<HomePage> {
     );
   }
 
-  void saveIncome() {
+  void saveIncome(BuildContext context) {
     if (newIncomeAmountController.text.isNotEmpty) {
       String amount = '${newIncomeAmountController.text}';
+      setState(() {
+        incomeAmount = amount;
+      });
       Provider.of<ExpenseData>(context, listen: false)
           .addNewIncome(amount);
       Navigator.pop(context);
@@ -124,7 +277,7 @@ class _HomePageState extends State<HomePage> {
         actions: [
           TextButton(
             onPressed: () {
-              Navigator.pop(context); // Close the dialog
+              Navigator.pop(context);
             },
             child: Text('Cancel'),
           ),
@@ -132,7 +285,7 @@ class _HomePageState extends State<HomePage> {
             onPressed: () {
               Provider.of<ExpenseData>(context, listen: false)
                   .deleteExpense(expense);
-              Navigator.pop(context); // Close the dialog
+              Navigator.pop(context);
             },
             child: Text('Delete'),
           ),
@@ -182,19 +335,6 @@ class _HomePageState extends State<HomePage> {
     );
   }
 
-  void saveEditedExpense(BuildContext context, ExpenseItem expense) {
-    if (newExpenseNameController.text.isNotEmpty &&
-        newExpenseAmountController.text.isNotEmpty) {
-      String amount = '${newExpenseAmountController.text}';
-      // Update the existing expense item
-      expense.name = newExpenseNameController.text;
-      expense.amount = amount;
-      expense.dateTime = DateTime.now();
-      Provider.of<ExpenseData>(context, listen: false)
-          .notifyListeners(); // Notify listeners about the change
-    }
-  }
-
   void cancel() {
     Navigator.pop(context);
     clear();
@@ -205,106 +345,6 @@ class _HomePageState extends State<HomePage> {
     newExpenseAmountController.clear();
     newIncomeAmountController.clear();
   }
-
-  @override
-  Widget build(BuildContext context) {
-    return Consumer<ExpenseData>(
-      builder: (context, value, child) => Scaffold(
-        resizeToAvoidBottomInset: false,
-        backgroundColor: Colors.grey.shade300,
-        body: Column(
-          children: [
-            SizedBox(
-              height: 695,
-              child: SingleChildScrollView(
-                child: Column(
-                  children: [
-                    Container(
-                      margin: EdgeInsets.all(0),
-                      padding: EdgeInsets.all(12),
-                      decoration: BoxDecoration(
-                        color: Colors.grey.shade300,
-                        borderRadius: BorderRadius.circular(0),
-                      ),
-                      child: ExpenseSummary(startofWeek: value.startofWeekData()),
-                    ),
-                    Container(
-                      margin: EdgeInsets.all(0),
-                      padding: EdgeInsets.all(6),
-                      decoration: BoxDecoration(
-                        color: Colors.grey.shade300,
-                        borderRadius: BorderRadius.circular(0),
-                      ),
-                      child: ListView.builder(
-                        shrinkWrap: true,
-                        physics: NeverScrollableScrollPhysics(),
-                        itemCount: value.getallExpenseList().length,
-                        itemBuilder: (context, index) {
-                          final expense = value.getallExpenseList()[index];
-                          // Filter out income from the list of expenses
-                          if (expense.name != 'Income') {
-                            return ExpenseTile(
-                              name: expense.name!,
-                              amount: expense.amount!,
-                              dateTime: expense.dateTime,
-                              deleteTapped: (p0) =>
-                                  deleteExpense(expense),
-                              editTapped: (p0) =>
-                                  editExpense(expense),
-                            );
-                          } else {
-                            // Return an empty container for income
-                            return Container();
-                          }
-                        },
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-            ),
-            Container(
-              color: Colors.grey.shade300,
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                children: [
-
-                  Expanded(
-                    child: Container(
-                      margin: EdgeInsets.only(right: 10, left: 10),
-                      padding: EdgeInsets.only(left: 5),
-                      child: FloatingActionButton.extended(
-                        shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(30)),
-                        onPressed: addNewExpense,
-                        label: Text('Add Expense',
-                            style: TextStyle(color: Colors.white)),
-                        foregroundColor: Colors.white,
-                        backgroundColor: Colors.black87,
-                      ),
-                    ),
-                  ),
-                  Expanded(
-                    child: Container(
-                      margin: EdgeInsets.symmetric(vertical: 15),
-                      padding: EdgeInsets.only(right: 17, left: 18),
-                      child: FloatingActionButton.extended(
-                        shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(30)),
-                        onPressed: addIncome,
-                        label: Text('Income',
-                            style: TextStyle(color: Colors.white)),
-                        foregroundColor: Colors.white,
-                        backgroundColor: Colors.black87,
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
+  
+  void saveEditedExpense(BuildContext context, ExpenseItem expense) {}
 }
