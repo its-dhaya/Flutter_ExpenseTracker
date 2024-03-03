@@ -17,7 +17,6 @@ class _HomePageState extends State<HomePage> {
   final newExpenseNameController = TextEditingController();
   final newExpenseAmountController = TextEditingController();
   final newIncomeAmountController = TextEditingController();
-  String incomeAmount = "";
 
   @override
   void initState() {
@@ -37,6 +36,8 @@ class _HomePageState extends State<HomePage> {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     await prefs.setString('incomeAmount', amount);
   }
+
+  String incomeAmount = '';
 
   @override
   Widget build(BuildContext context) {
@@ -100,71 +101,67 @@ class _HomePageState extends State<HomePage> {
           ),
         ),
         backgroundColor: Colors.white,
-        body: SingleChildScrollView(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: [
-              Container(
-                margin: EdgeInsets.all(12),
-                decoration: BoxDecoration(
-                  color: Colors.white,
-                  borderRadius: BorderRadius.circular(10),
-                ),
-                child: ExpenseSummary(
-                  startofWeek: value.startofWeekData(),
-                  incomeAmount: incomeAmount,
-                ),
+        body: Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            Container(
+              margin: EdgeInsets.all(12),
+              decoration: BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.circular(10),
               ),
-              Container(
-                height: 10, // Adjust the height as needed
-                child: ListView.builder(
-                  shrinkWrap: true,
-                  itemCount: value.getallExpenseList().length,
-                  itemBuilder: (context, index) {
-                    final expense = value.getallExpenseList()[index];
-                    if (expense.name != 'Income') {
-                      return ExpenseTile(
-                        name: expense.name!,
-                        amount: expense.amount!,
-                        dateTime: expense.dateTime,
-                        deleteTapped: (p0) => deleteExpense(expense),
-                        editTapped: (p0) => editExpense(expense),
-                      );
-                    } else {
-                      return Container();
-                    }
-                  },
-                ),
+              child: ExpenseSummary(
+                startofWeek: value.startofWeekData(),
+                incomeAmount: incomeAmount,
               ),
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 12),
-                child: Container(
-                  decoration: BoxDecoration(color: Colors.blueGrey.shade900,borderRadius: BorderRadius.circular(20)),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: Text(
-                          'Add Expense',
-                          style: TextStyle(
-                            fontSize: 16,
-                            fontWeight: FontWeight.bold,
-                            color: Colors.white
-                          ),
+            ),
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 12),
+              child: Container(
+                decoration: BoxDecoration(color: Colors.blueGrey.shade900,borderRadius: BorderRadius.circular(20)),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Text(
+                        'Add Expense',
+                        style: TextStyle(
+                          fontSize: 16,
+                          fontWeight: FontWeight.bold,
+                          color: Colors.white
                         ),
                       ),
-                      IconButton(
-                        onPressed: addNewExpense,
-                        icon: Icon(Icons.add),
-                        color: Colors.white,
-                      ),
-                    ],
-                  ),
+                    ),
+                    IconButton(
+                      onPressed: addNewExpense,
+                      icon: Icon(Icons.add),
+                      color: Colors.white,
+                    ),
+                  ],
                 ),
               ),
-            ],
-          ),
+            ),
+            Expanded(
+              child: ListView.builder(
+                itemCount: value.getallExpenseList().length,
+                itemBuilder: (context, index) {
+                  final expense = value.getallExpenseList()[index];
+                  if (expense.name != 'Income') {
+                    return ExpenseTile(
+                      name: expense.name!,
+                      amount: expense.amount!,
+                      dateTime: expense.dateTime,
+                      deleteTapped: (p0) => deleteExpense(expense),
+                      editTapped: (p0) => editExpense(expense),
+                    );
+                  } else {
+                    return Container();
+                  }
+                },
+              ),
+            ),
+          ],
         ),
       ),
     );
@@ -258,7 +255,7 @@ class _HomePageState extends State<HomePage> {
       setState(() {
         incomeAmount = amount;
       });
-      _saveIncomeAmount(amount);
+      _saveIncomeAmount(amount); // Save income amount using shared preferences
       Provider.of<ExpenseData>(context, listen: false)
           .addNewIncome(amount);
       Navigator.pop(context);
