@@ -119,16 +119,18 @@ class ExpenseData extends ChangeNotifier {
     return total;
   }
 
-  void deductIncome(String amount) {
-    double currentIncome = calculateIncomeTotal();
-    double deductedAmount = double.parse(amount);
-    double newIncome = currentIncome - deductedAmount;
+void deductIncome(String amount) {
+  double currentIncome = calculateIncomeTotal();
+  double deductedAmount = double.tryParse(amount) ?? 0; // Add error handling
+  double newIncome = currentIncome - deductedAmount;
 
-    overallExpensList.removeWhere((expense) => expense.name == 'Income');
-    overallExpensList.add(ExpenseItem(
-      name: 'Income',
-      amount: newIncome.toString(),
-      dateTime: DateTime.now(),
-    ));
-  }
+  overallExpensList.removeWhere((expense) => expense.name == 'Income');
+  overallExpensList.add(ExpenseItem(
+    name: 'Income',
+    amount: newIncome.toString(),
+    dateTime: DateTime.now(),
+  ));
+
+  notifyListeners(); // Notify listeners after updating the expense list
+}
 }

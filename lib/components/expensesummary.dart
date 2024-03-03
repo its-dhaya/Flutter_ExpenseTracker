@@ -9,7 +9,8 @@ class ExpenseSummary extends StatelessWidget {
 
   const ExpenseSummary({
     Key? key,
-    required this.startofWeek, required String incomeAmount,
+    required this.startofWeek,
+    required String incomeAmount,
   }) : super(key: key);
 
   double calculateMax(
@@ -69,14 +70,16 @@ class ExpenseSummary extends StatelessWidget {
 
   String calculateRemainingIncome(ExpenseData value) {
     double incomeTotal = double.parse(calculateIncomeTotal(value));
-    double totalExpenses = double.parse(calculateWeektotal(value,
-        convertDateTimetoString(startofWeek.add(const Duration(days: 0))),
-        convertDateTimetoString(startofWeek.add(const Duration(days: 1))),
-        convertDateTimetoString(startofWeek.add(const Duration(days: 2))),
-        convertDateTimetoString(startofWeek.add(const Duration(days: 3))),
-        convertDateTimetoString(startofWeek.add(const Duration(days: 4))),
-        convertDateTimetoString(startofWeek.add(const Duration(days: 5))),
-        convertDateTimetoString(startofWeek.add(const Duration(days: 6)))));
+    double totalExpenses = double.parse(calculateWeektotal(
+      value,
+      convertDateTimetoString(startofWeek.add(const Duration(days: 0))),
+      convertDateTimetoString(startofWeek.add(const Duration(days: 1))),
+      convertDateTimetoString(startofWeek.add(const Duration(days: 2))),
+      convertDateTimetoString(startofWeek.add(const Duration(days: 3))),
+      convertDateTimetoString(startofWeek.add(const Duration(days: 4))),
+      convertDateTimetoString(startofWeek.add(const Duration(days: 5))),
+      convertDateTimetoString(startofWeek.add(const Duration(days: 6))),
+    ));
     double remainingIncome = incomeTotal - totalExpenses;
     return remainingIncome.round().toString();
   }
@@ -97,25 +100,29 @@ class ExpenseSummary extends StatelessWidget {
         String remainingIncome = calculateRemainingIncome(value);
         return Column(
           children: [
-            
             Padding(
               padding: const EdgeInsets.all(10),
               child: Container(
                 height: 40,
-                decoration: BoxDecoration(color: Colors.blueGrey.shade900,
-                borderRadius: BorderRadius.circular(20)),
+                decoration: BoxDecoration(
+                  color: Colors.blueGrey.shade900,
+                  borderRadius: BorderRadius.circular(20),
+                ),
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        
                         Padding(
                           padding: const EdgeInsets.all(8),
                           child: Text(
                             "Weekly Total:",
-                            style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16,color: Colors.white),
+                            style: TextStyle(
+                              fontWeight: FontWeight.bold,
+                              fontSize: 16,
+                              color: Colors.white,
+                            ),
                           ),
                         ),
                       ],
@@ -124,22 +131,25 @@ class ExpenseSummary extends StatelessWidget {
                       padding: const EdgeInsets.all(8.0),
                       child: Text(
                         '₹${calculateWeektotal(value, sunday, monday, tuesday, wednesday, thursday, friday, saturday)}',
-                        style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16,color: Colors.white),
+                        style: TextStyle(
+                          fontWeight: FontWeight.bold,
+                          fontSize: 16,
+                          color: Colors.white,
+                        ),
                       ),
                     ),
-                
                   ],
                 ),
               ),
             ),
-            
-            
             Padding(
               padding: const EdgeInsets.all(10),
               child: Container(
                 height: 40,
-                decoration: BoxDecoration(color: Colors.blueGrey.shade900,
-                borderRadius: BorderRadius.circular(20),),
+                decoration: BoxDecoration(
+                  color: Colors.blueGrey.shade900,
+                  borderRadius: BorderRadius.circular(20),
+                ),
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
@@ -147,14 +157,22 @@ class ExpenseSummary extends StatelessWidget {
                       padding: const EdgeInsets.all(8.0),
                       child: Text(
                         "Remaining Income:",
-                        style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16,color: Colors.white),
+                        style: TextStyle(
+                          fontWeight: FontWeight.bold,
+                          fontSize: 16,
+                          color: Colors.white,
+                        ),
                       ),
                     ),
                     Padding(
                       padding: const EdgeInsets.all(8.0),
                       child: Text(
                         '₹$remainingIncome',
-                        style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16,color: Colors.white),
+                        style: TextStyle(
+                          fontWeight: FontWeight.bold,
+                          fontSize: 16,
+                          color: Colors.white,
+                        ),
                       ),
                     ),
                   ],

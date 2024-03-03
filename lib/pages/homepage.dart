@@ -52,120 +52,98 @@ class _HomePageState extends State<HomePage> {
           child: ListView(
             padding: EdgeInsets.zero,
             children: [
-              SizedBox(
-                height: 188,
-                child: DrawerHeader(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        'Your Income!',
-                        style: TextStyle(
+              DrawerHeader(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      'Your Income!',
+                      style: TextStyle(
+                        color: Colors.white,
+                        fontWeight: FontWeight.bold,
+                        fontSize: 25,
+                      ),
+                    ),
+                    SizedBox(height: 30),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Text('AMOUNT: ₹$incomeAmount', style: TextStyle(fontWeight: FontWeight.bold, color: Colors.white)),
+                        IconButton(
+                          icon: Icon(Icons.edit),
                           color: Colors.white,
-                          fontWeight: FontWeight.bold,
-                          fontSize: 25,
+                          onPressed: () => editIncome(context),
                         ),
-                      ),
-                      SizedBox(height: 30),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Text('AMOUNT: ₹$incomeAmount', style: TextStyle(fontWeight: FontWeight.bold,color: Colors.white)),
-                          IconButton(
-                            icon: Icon(Icons.edit),
-                            color: Colors.white,
-                            onPressed: () => editIncome(context),
-                          ),
-                        ],
-                        
-                      ),
-                      
-                    ],
-                  ),
-                  decoration: BoxDecoration(
-                    color: Colors.black87,
-                  ),
+                      ],
+                    ),
+                  ],
+                ),
+                decoration: BoxDecoration(
+                  color: Colors.black87,
                 ),
               ),
             ],
           ),
         ),
-        resizeToAvoidBottomInset: false,
         backgroundColor: Colors.white,
         body: Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
-            SizedBox(
-              height: 690,
-              child: SingleChildScrollView(
-                child: Column(
+            Container(
+              margin: EdgeInsets.all(12),
+              decoration: BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.circular(10),
+              ),
+              child: ExpenseSummary(
+                startofWeek: value.startofWeekData(),
+                incomeAmount: incomeAmount,
+              ),
+            ),
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 12),
+              child: Container(
+                decoration: BoxDecoration(color: Colors.blueGrey.shade900,borderRadius: BorderRadius.circular(20)),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    Container(
-                      margin: EdgeInsets.all(0),
-                      padding: EdgeInsets.all(12),
-                      decoration: BoxDecoration(
-                        color: Colors.white,
-                        borderRadius: BorderRadius.circular(0),
-                      ),
-                      child: ExpenseSummary(
-                        startofWeek: value.startofWeekData(),
-                        incomeAmount: incomeAmount,
+                    Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Text(
+                        'Add Expense',
+                        style: TextStyle(
+                          fontSize: 16,
+                          fontWeight: FontWeight.bold,
+                          color: Colors.white
+                        ),
                       ),
                     ),
-                    Container(
-                      margin: EdgeInsets.all(0),
-                      padding: EdgeInsets.all(6),
-                      decoration: BoxDecoration(
-                        color: Colors.white,
-                        borderRadius: BorderRadius.circular(0),
-                      ),
-                      child: ListView.builder(
-                        shrinkWrap: true,
-                        physics: NeverScrollableScrollPhysics(),
-                        itemCount: value.getallExpenseList().length,
-                        itemBuilder: (context, index) {
-                          final expense = value.getallExpenseList()[index];
-                          if (expense.name != 'Income') {
-                            return ExpenseTile(
-                              name: expense.name!,
-                              amount: expense.amount!,
-                              dateTime: expense.dateTime,
-                              deleteTapped: (p0) => deleteExpense(expense),
-                              editTapped: (p0) => editExpense(expense),
-                            );
-                          } else {
-                            return Container();
-                          }
-                        },
-                      ),
+                    IconButton(
+                      onPressed: addNewExpense,
+                      icon: Icon(Icons.add),
+                      color: Colors.white,
                     ),
                   ],
                 ),
               ),
             ),
-            Container(
-              color: Colors.white,
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                children: [
-                  Expanded(
-                    child: Container(
-                      margin: EdgeInsets.only(right: 10, left: 10),
-                      padding: EdgeInsets.only(left: 5),
-                      child: MaterialButton(
-                        onPressed: addNewExpense,
-                        color: Colors.black87,
-                        textColor: Colors.white,
-                        elevation: 0,
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(30),
-                        ),
-                        minWidth: 10,
-                        height: 50,
-                        child: Text('Add Expense'),
-                      ),
-                    ),
-                  ),
-                ],
+            Expanded(
+              child: ListView.builder(
+                itemCount: value.getallExpenseList().length,
+                itemBuilder: (context, index) {
+                  final expense = value.getallExpenseList()[index];
+                  if (expense.name != 'Income') {
+                    return ExpenseTile(
+                      name: expense.name!,
+                      amount: expense.amount!,
+                      dateTime: expense.dateTime,
+                      deleteTapped: (p0) => deleteExpense(expense),
+                      editTapped: (p0) => editExpense(expense),
+                    );
+                  } else {
+                    return Container();
+                  }
+                },
               ),
             ),
           ],
@@ -183,13 +161,13 @@ class _HomePageState extends State<HomePage> {
           mainAxisSize: MainAxisSize.min,
           children: [
             TextField(
-              decoration: const InputDecoration(hintText: 'Expense name'),
+              decoration: InputDecoration(hintText: 'Expense name'),
               controller: newExpenseNameController,
             ),
             TextField(
               controller: newExpenseAmountController,
               keyboardType: TextInputType.number,
-              decoration: const InputDecoration(
+              decoration: InputDecoration(
                 hintText: 'Amount',
               ),
             ),
@@ -198,11 +176,11 @@ class _HomePageState extends State<HomePage> {
         actions: [
           MaterialButton(
             onPressed: cancel,
-            child: const Text('Cancel'),
+            child: Text('Cancel'),
           ),
           MaterialButton(
             onPressed: save,
-            child: const Text('Save'),
+            child: Text('Save'),
           )
         ],
       ),
