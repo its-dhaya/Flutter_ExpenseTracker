@@ -4,6 +4,7 @@ import 'package:project/components/expensetile.dart';
 import 'package:project/data/expensedata.dart';
 import 'package:project/models/expenseitem.dart';
 import 'package:provider/provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({Key? key}) : super(key: key);
@@ -21,7 +22,20 @@ class _HomePageState extends State<HomePage> {
   @override
   void initState() {
     super.initState();
+    _loadIncomeAmount();
     Provider.of<ExpenseData>(context, listen: false).perpareData();
+  }
+
+  void _loadIncomeAmount() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    setState(() {
+      incomeAmount = prefs.getString('incomeAmount') ?? '';
+    });
+  }
+
+  void _saveIncomeAmount(String amount) async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    await prefs.setString('incomeAmount', amount);
   }
 
   @override
@@ -86,67 +100,71 @@ class _HomePageState extends State<HomePage> {
           ),
         ),
         backgroundColor: Colors.white,
-        body: Column(
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: [
-            Container(
-              margin: EdgeInsets.all(12),
-              decoration: BoxDecoration(
-                color: Colors.white,
-                borderRadius: BorderRadius.circular(10),
-              ),
-              child: ExpenseSummary(
-                startofWeek: value.startofWeekData(),
-                incomeAmount: incomeAmount,
-              ),
-            ),
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 12),
-              child: Container(
-                decoration: BoxDecoration(color: Colors.blueGrey.shade900,borderRadius: BorderRadius.circular(20)),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: Text(
-                        'Add Expense',
-                        style: TextStyle(
-                          fontSize: 16,
-                          fontWeight: FontWeight.bold,
-                          color: Colors.white
-                        ),
-                      ),
-                    ),
-                    IconButton(
-                      onPressed: addNewExpense,
-                      icon: Icon(Icons.add),
-                      color: Colors.white,
-                    ),
-                  ],
+        body: SingleChildScrollView(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              Container(
+                margin: EdgeInsets.all(12),
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.circular(10),
+                ),
+                child: ExpenseSummary(
+                  startofWeek: value.startofWeekData(),
+                  incomeAmount: incomeAmount,
                 ),
               ),
-            ),
-            Expanded(
-              child: ListView.builder(
-                itemCount: value.getallExpenseList().length,
-                itemBuilder: (context, index) {
-                  final expense = value.getallExpenseList()[index];
-                  if (expense.name != 'Income') {
-                    return ExpenseTile(
-                      name: expense.name!,
-                      amount: expense.amount!,
-                      dateTime: expense.dateTime,
-                      deleteTapped: (p0) => deleteExpense(expense),
-                      editTapped: (p0) => editExpense(expense),
-                    );
-                  } else {
-                    return Container();
-                  }
-                },
+              Container(
+                height: 10, // Adjust the height as needed
+                child: ListView.builder(
+                  shrinkWrap: true,
+                  itemCount: value.getallExpenseList().length,
+                  itemBuilder: (context, index) {
+                    final expense = value.getallExpenseList()[index];
+                    if (expense.name != 'Income') {
+                      return ExpenseTile(
+                        name: expense.name!,
+                        amount: expense.amount!,
+                        dateTime: expense.dateTime,
+                        deleteTapped: (p0) => deleteExpense(expense),
+                        editTapped: (p0) => editExpense(expense),
+                      );
+                    } else {
+                      return Container();
+                    }
+                  },
+                ),
               ),
-            ),
-          ],
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 12),
+                child: Container(
+                  decoration: BoxDecoration(color: Colors.blueGrey.shade900,borderRadius: BorderRadius.circular(20)),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: Text(
+                          'Add Expense',
+                          style: TextStyle(
+                            fontSize: 16,
+                            fontWeight: FontWeight.bold,
+                            color: Colors.white
+                          ),
+                        ),
+                      ),
+                      IconButton(
+                        onPressed: addNewExpense,
+                        icon: Icon(Icons.add),
+                        color: Colors.white,
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+            ],
+          ),
         ),
       ),
     );
@@ -240,6 +258,7 @@ class _HomePageState extends State<HomePage> {
       setState(() {
         incomeAmount = amount;
       });
+      _saveIncomeAmount(amount);
       Provider.of<ExpenseData>(context, listen: false)
           .addNewIncome(amount);
       Navigator.pop(context);
