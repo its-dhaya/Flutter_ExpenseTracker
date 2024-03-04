@@ -340,5 +340,15 @@ class _HomePageState extends State<HomePage> {
     newIncomeAmountController.clear();
   }
   
-  void saveEditedExpense(BuildContext context, ExpenseItem expense) {}
+  void saveEditedExpense(BuildContext context, ExpenseItem expense) {
+      if (newExpenseNameController.text.isNotEmpty &&
+      newExpenseAmountController.text.isNotEmpty) {
+    String amount = '${newExpenseAmountController.text}';
+    Provider.of<ExpenseData>(context, listen: false).editExpense(
+      expense,
+      newExpenseNameController.text,
+      amount,
+    );
+  }
+  }
 }

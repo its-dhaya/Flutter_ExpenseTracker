@@ -133,4 +133,25 @@ void deductIncome(String amount) {
 
   notifyListeners(); // Notify listeners after updating the expense list
 }
+
+  void editExpense(ExpenseItem expense, String text, String amount) {
+  // Find the index of the expense item in the list
+  int index = overallExpensList.indexOf(expense);
+  
+  if (index != -1) { // Check if the expense item exists in the list
+    // Update the properties of the expense item
+    overallExpensList[index] = ExpenseItem(
+      name: text,
+      amount: amount,
+      dateTime: expense.dateTime,
+    );
+    
+    // Save the updated list to your data source
+    db.saveData(overallExpensList);
+    
+    // Notify listeners to update the UI
+    notifyListeners();
+  }
+}
+
 }
