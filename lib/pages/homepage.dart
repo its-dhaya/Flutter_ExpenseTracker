@@ -53,7 +53,7 @@ class _HomePageState extends State<HomePage> {
             ),
           ),
           centerTitle: true,
-          backgroundColor: Colors.black87,
+          backgroundColor: Colors.blueGrey.shade900,
           leading: Builder(
             builder: (context) => IconButton(
               icon: Icon(Icons.menu, color: Colors.white),
@@ -94,7 +94,7 @@ class _HomePageState extends State<HomePage> {
                   ],
                 ),
                 decoration: BoxDecoration(
-                  color: Colors.black87,
+                  color: Colors.blueGrey.shade900,
                 ),
               ),
             ],

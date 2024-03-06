@@ -3,6 +3,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:hive_flutter/adapters.dart';
 import 'package:project/data/expensedata.dart';
 import 'package:project/pages/homepage.dart';
+import 'package:project/pages/interface.dart';
 import 'package:provider/provider.dart';
 
 void main() async {
@@ -22,13 +23,13 @@ class MyApp extends StatelessWidget {
     return ScreenUtilInit(
       
       designSize:const Size(360, 640),
-      child: ChangeNotifierProvider(
+      child: ChangeNotifierProvider(  
         
         create: (context)=>ExpenseData(),
         builder: (context,child)=> const MaterialApp(
           
           debugShowCheckedModeBanner: false,
-          home: HomePage(),
+          home: MyInterFace(),
         ),
         ),
     );
