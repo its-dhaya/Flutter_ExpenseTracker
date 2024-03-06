@@ -15,7 +15,7 @@ class MyInterFace extends StatelessWidget {
             height: double.infinity,
             decoration: BoxDecoration(
               image: DecorationImage(
-                image: AssetImage('assets/Home.jpg'),
+                image: AssetImage('assets/home.jpeg'),
                 fit: BoxFit.cover,
               ),
             ),
@@ -36,14 +36,14 @@ class MyInterFace extends StatelessWidget {
                 height: 60,
                 margin: EdgeInsets.symmetric(horizontal: 20),
                 decoration: BoxDecoration(
-                  color: Colors.indigo,
+                  color: Colors.white,
                   borderRadius: BorderRadius.circular(10),
                 ),
                 child: Center(
                   child: Text(
                     'Manage your Expense',
                     style: TextStyle(
-                      color: Colors.white,
+                      color: Colors.black,
                       fontSize: 16,
                       fontWeight: FontWeight.bold,
                     ),

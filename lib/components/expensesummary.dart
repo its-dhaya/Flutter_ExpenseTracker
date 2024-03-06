@@ -105,7 +105,7 @@ class ExpenseSummary extends StatelessWidget {
               child: Container(
                 height: 40,
                 decoration: BoxDecoration(
-                  color: Colors.blueGrey.shade900,
+                  color: Colors.lightBlue.shade900,
                   borderRadius: BorderRadius.circular(20),
                 ),
                 child: Row(
@@ -147,7 +147,7 @@ class ExpenseSummary extends StatelessWidget {
               child: Container(
                 height: 40,
                 decoration: BoxDecoration(
-                  color: Colors.blueGrey.shade900,
+                  color: Colors.lightBlue.shade900,
                   borderRadius: BorderRadius.circular(20),
                 ),
                 child: Row(

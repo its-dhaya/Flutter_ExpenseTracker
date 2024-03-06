@@ -21,7 +21,7 @@ class ExpenseData extends ChangeNotifier {
 
   // Add new expense
   void addNewExpense(ExpenseItem newExpense) {
-    overallExpensList.add(newExpense);
+    overallExpensList.insert(0,newExpense);
     if (newExpense.name != 'Income') {
       db.saveData(overallExpensList);
     } else {

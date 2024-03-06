@@ -53,7 +53,7 @@ class _HomePageState extends State<HomePage> {
             ),
           ),
           centerTitle: true,
-          backgroundColor: Colors.blueGrey.shade900,
+          backgroundColor: Colors.lightBlue.shade900,
           leading: Builder(
             builder: (context) => IconButton(
               icon: Icon(Icons.menu, color: Colors.white),
@@ -83,7 +83,7 @@ class _HomePageState extends State<HomePage> {
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        Text('AMOUNT: ₹$incomeAmount', style: TextStyle(fontWeight: FontWeight.bold, color: Colors.white)),
+                        Text('AMOUNT: ₹${incomeAmount}0', style: TextStyle(fontWeight: FontWeight.bold, color: Colors.white)),
                         IconButton(
                           icon: Icon(Icons.edit),
                           color: Colors.white,
@@ -94,7 +94,7 @@ class _HomePageState extends State<HomePage> {
                   ],
                 ),
                 decoration: BoxDecoration(
-                  color: Colors.blueGrey.shade900,
+                  color: Colors.lightBlue.shade900,
                 ),
               ),
             ],
