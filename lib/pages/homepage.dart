@@ -89,7 +89,7 @@ class _HomePageState extends State<HomePage> {
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        Text('AMOUNT: ₹${incomeAmount}0', style: TextStyle(fontWeight: FontWeight.bold, color: Colors.white)),
+                        Text('AMOUNT: ₹${incomeAmount}', style: TextStyle(fontWeight: FontWeight.bold, color: Colors.white)),
                         IconButton(
                           icon: Icon(Icons.edit),
                           color: Colors.white,
