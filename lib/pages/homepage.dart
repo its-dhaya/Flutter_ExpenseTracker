@@ -5,6 +5,7 @@ import 'package:project/data/expensedata.dart';
 import 'package:project/models/expenseitem.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:flutter/services.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({Key? key}) : super(key: key);
@@ -20,6 +21,11 @@ class _HomePageState extends State<HomePage> {
 
   @override
   void initState() {
+    SystemChrome.setPreferredOrientations([
+      DeviceOrientation.portraitUp,
+      DeviceOrientation.portraitDown
+
+    ]);
     super.initState();
     _loadIncomeAmount();
     Provider.of<ExpenseData>(context, listen: false).perpareData();
