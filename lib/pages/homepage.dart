@@ -264,6 +264,7 @@ class _HomePageState extends State<HomePage> {
       _saveIncomeAmount(amount); // Save income amount using shared preferences
       Provider.of<ExpenseData>(context, listen: false)
           .addNewIncome(amount);
+      Provider.of<ExpenseData>(context,listen: false).notifyListeners();
       Navigator.pop(context);
       clear();
     }
