@@ -69,7 +69,7 @@ class ExpenseSummary extends StatelessWidget {
   }
 
   String calculateRemainingIncome(ExpenseData value) {
-    double incomeTotal = double.parse(calculateIncomeTotal(value));
+    double incomeTotal = value.calculateIncomeTotal();
     double totalExpenses = double.parse(calculateWeektotal(
       value,
       convertDateTimetoString(startofWeek.add(const Duration(days: 0))),
@@ -95,8 +95,6 @@ class ExpenseSummary extends StatelessWidget {
     String saturday = convertDateTimetoString(startofWeek.add(const Duration(days: 6)));
     return Consumer<ExpenseData>(
       builder: (context, value, child) {
-        // Calculate income separately
-        String incomeTotal = calculateIncomeTotal(value);
         String remainingIncome = calculateRemainingIncome(value);
         return Column(
           children: [

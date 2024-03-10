@@ -95,18 +95,30 @@ class ExpenseData extends ChangeNotifier {
   }
 
   // Add new income
-  void addNewIncome(String amount) {
-    DateTime now = DateTime.now();
-    overallExpensList.removeWhere((expense) => expense.name == 'Income');
-    ExpenseItem newIncome = ExpenseItem(
-      name: 'Income',
-      amount: amount,
-      dateTime: now,
-    );
+void addNewIncome(String amount) {
+  // Get the current date and time
+  DateTime now = DateTime.now();
+  
+  // Remove the existing 'Income' expense item, if any
+  overallExpensList.removeWhere((expense) => expense.name == 'Income');
+  
+  // Create a new 'Income' expense item with the updated amount and current date/time
+  ExpenseItem newIncome = ExpenseItem(
+    name: 'Income',
+    amount: amount,
+    dateTime: now,
+  );
 
-    overallExpensList.add(newIncome);
-    notifyListeners();
-  }
+  // Add the new 'Income' expense item to the list
+  overallExpensList.add(newIncome);
+
+  // Persist the updated list (overallExpensList) to the data source (e.g., SharedPreferences, database)
+  db.saveData(overallExpensList);
+
+  // Notify listeners to update the UI
+  notifyListeners();
+}
+
 
   // Calculate income total
   double calculateIncomeTotal() {
@@ -120,21 +132,39 @@ class ExpenseData extends ChangeNotifier {
   }
 
 void deductIncome(String amount) {
+  // Get the current total income
   double currentIncome = calculateIncomeTotal();
-  double deductedAmount = double.tryParse(amount) ?? 0; // Add error handling
+  
+  // Parse the deducted amount
+  double deductedAmount = double.tryParse(amount) ?? 0; // Add error handling if necessary
+  
+  // Calculate the new income after deduction
   double newIncome = currentIncome - deductedAmount;
 
-  overallExpensList.removeWhere((expense) => expense.name == 'Income');
-  overallExpensList.add(ExpenseItem(
-    name: 'Income',
-    amount: newIncome.toString(),
-    dateTime: DateTime.now(),
-  ));
+  // Find the index of the existing 'Income' item in the list
+  int index = overallExpensList.indexWhere((expense) => expense.name == 'Income');
 
-  notifyListeners(); // Notify listeners after updating the expense list
+  if (index != -1) {
+    // Update the amount of the existing 'Income' item
+    overallExpensList[index].amount = newIncome.toString();
+    
+    // Optionally, update the dateTime of the 'Income' item to reflect the time of the deduction
+    overallExpensList[index].dateTime = DateTime.now();
+  } else {
+    // If 'Income' item doesn't exist, add a new one with the updated amount
+    overallExpensList.add(ExpenseItem(
+      name: 'Income',
+      amount: newIncome.toString(),
+      dateTime: DateTime.now(),
+    ));
+  }
+
+  // Notify listeners after updating the expense list
+  notifyListeners();
 }
 
-  void editExpense(ExpenseItem expense, String text, String amount) {
+
+void editExpense(ExpenseItem expense, String text, String amount) {
   // Find the index of the expense item in the list
   int index = overallExpensList.indexOf(expense);
   
@@ -145,7 +175,37 @@ void deductIncome(String amount) {
       amount: amount,
       dateTime: expense.dateTime,
     );
-    
+
+    // Check if the edited expense is an income
+    if (text == 'Income') {
+      // Calculate the new income total
+      double newIncome = overallExpensList
+          .where((item) => item.name == 'Income')
+          .map((item) => double.tryParse(item.amount) ?? 0)
+          .fold(0, (prev, curr) => prev + curr);
+
+      // Deduct the new income from the overall expenses
+      double totalExpenses = overallExpensList
+          .where((item) => item.name != 'Income')
+          .map((item) => double.tryParse(item.amount) ?? 0)
+          .fold(0, (prev, curr) => prev + curr);
+
+      double remainingIncome = newIncome - totalExpenses;
+
+      // Update the income item with the new total
+      overallExpensList.removeWhere((item) => item.name == 'Income');
+      overallExpensList.add(ExpenseItem(
+        name: 'Income',
+        amount: newIncome.toString(),
+        dateTime: DateTime.now(),
+      ));
+
+      // Notify listeners to update the UI
+      notifyListeners();
+
+      return;
+    }
+
     // Save the updated list to your data source
     db.saveData(overallExpensList);
     
@@ -153,5 +213,6 @@ void deductIncome(String amount) {
     notifyListeners();
   }
 }
+
 
 }
