@@ -57,7 +57,7 @@ class ExpenseSummary extends StatelessWidget {
       value.calculateDailyExpense()[friday] ?? 0,
       value.calculateDailyExpense()[saturday] ?? 0,
     ];
-
+  //values to show the deducted income
     values.removeWhere((amount) => amount < 0);
     double total = values.reduce((value, element) => value + element);
     return total.round().toString();
@@ -132,7 +132,7 @@ class ExpenseSummary extends StatelessWidget {
                         style: TextStyle(
                           fontWeight: FontWeight.bold,
                           fontSize: 16,
-                          color: Colors.white,
+                          color: Color.fromARGB(243, 255, 255, 255),
                         ),
                       ),
                     ),

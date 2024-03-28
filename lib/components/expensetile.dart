@@ -45,12 +45,13 @@ void Function(BuildContext)? editTapped;
           color: Colors.blueGrey.shade400,
           borderRadius: BorderRadius.circular(15)
         ),
+        
         margin: EdgeInsets.symmetric(vertical: 10,horizontal: 15),
 
           child: ListTile(
                 title: Text(name,style: TextStyle(fontWeight: FontWeight.bold,fontSize: 18),),
                   subtitle: Text(
-    '${DateFormat('EEEE, MMM d, yyyy').format(dateTime)}',style:TextStyle(color: Colors.black), // Format date including day of the week
+                 '${DateFormat('EEEE, MMM d, yyyy').format(dateTime)}',style:TextStyle(color: Colors.black), // Format date including day of the week
   ),
                 trailing: Text('₹'+amount,style: TextStyle(fontWeight: FontWeight.bold,fontSize: 16,color: Colors.white),),
                 ),
