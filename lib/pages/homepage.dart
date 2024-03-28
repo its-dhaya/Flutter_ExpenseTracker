@@ -23,8 +23,7 @@ class _HomePageState extends State<HomePage> {
   void initState() {
     SystemChrome.setPreferredOrientations([
       DeviceOrientation.portraitUp,
-      DeviceOrientation.portraitDown
-
+      DeviceOrientation.portraitDown,
     ]);
     super.initState();
     _loadIncomeAmount();
@@ -89,7 +88,11 @@ class _HomePageState extends State<HomePage> {
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        Text('AMOUNT: ₹${incomeAmount}', style: TextStyle(fontWeight: FontWeight.bold, color: Colors.white)),
+                        Text(
+                          'AMOUNT: ₹${incomeAmount}',
+                          style: TextStyle(
+                              fontWeight: FontWeight.bold, color: Colors.white),
+                        ),
                         IconButton(
                           icon: Icon(Icons.edit),
                           color: Colors.white,
@@ -124,7 +127,9 @@ class _HomePageState extends State<HomePage> {
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 12),
               child: Container(
-                decoration: BoxDecoration(color: Colors.blueGrey.shade900,borderRadius: BorderRadius.circular(20)),
+                decoration: BoxDecoration(
+                    color: Colors.blueGrey.shade900,
+                    borderRadius: BorderRadius.circular(20)),
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
@@ -133,10 +138,9 @@ class _HomePageState extends State<HomePage> {
                       child: Text(
                         'Add Expense',
                         style: TextStyle(
-                          fontSize: 16,
-                          fontWeight: FontWeight.bold,
-                          color: Colors.white
-                        ),
+                            fontSize: 16,
+                            fontWeight: FontWeight.bold,
+                            color: Colors.white),
                       ),
                     ),
                     IconButton(
@@ -153,17 +157,13 @@ class _HomePageState extends State<HomePage> {
                 itemCount: value.getallExpenseList().length,
                 itemBuilder: (context, index) {
                   final expense = value.getallExpenseList()[index];
-                  if (expense.name != 'Income') {
-                    return ExpenseTile(
-                      name: expense.name!,
-                      amount: expense.amount!,
-                      dateTime: expense.dateTime,
-                      deleteTapped: (p0) => deleteExpense(expense),
-                      editTapped: (p0) => editExpense(expense),
-                    );
-                  } else {
-                    return Container();
-                  }
+                  return ExpenseTile(
+                    name: expense.name!,
+                    amount: expense.amount!,
+                    dateTime: expense.dateTime,
+                    deleteTapped: (p0) => deleteExpense(expense),
+                    editTapped: (p0) => editExpense(expense),
+                  );
                 },
               ),
             ),
@@ -264,7 +264,6 @@ class _HomePageState extends State<HomePage> {
       _saveIncomeAmount(amount); // Save income amount using shared preferences
       Provider.of<ExpenseData>(context, listen: false)
           .addNewIncome(amount);
-      Provider.of<ExpenseData>(context,listen: false).notifyListeners();
       Navigator.pop(context);
       clear();
     }
@@ -346,16 +345,16 @@ class _HomePageState extends State<HomePage> {
     newExpenseAmountController.clear();
     newIncomeAmountController.clear();
   }
-  
+
   void saveEditedExpense(BuildContext context, ExpenseItem expense) {
-      if (newExpenseNameController.text.isNotEmpty &&
-      newExpenseAmountController.text.isNotEmpty) {
-    String amount = '${newExpenseAmountController.text}';
-    Provider.of<ExpenseData>(context, listen: false).editExpense(
-      expense,
-      newExpenseNameController.text,
-      amount,
-    );
-  }
+    if (newExpenseNameController.text.isNotEmpty &&
+        newExpenseAmountController.text.isNotEmpty) {
+      String amount = '${newExpenseAmountController.text}';
+      Provider.of<ExpenseData>(context, listen: false).editExpense(
+        expense,
+        newExpenseNameController.text,
+        amount,
+      );
+    }
   }
 }
